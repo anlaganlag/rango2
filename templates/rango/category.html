@@ -1,13 +1,15 @@
-<!DOCTYPE html>
+{% extends 'rango/base.html' %}
 {% load static %}
-<html>
-<head>
-	<title>Rango</title>
-</head>
-<body>
-	<div>
-	{% if category %}
-		<h1>{{ category.name }}</h1>
+
+{% block title_block %}
+    {{ category.name }}
+{% endblock %}
+
+
+{% block body_block %}
+    {% if category %}
+        <h1>{{ category.name }}</h1>
+
 		{% if pages %}
 			<ul>
 			{% for page in pages %}
@@ -17,15 +19,12 @@
 		{% else %}
 			<strong>No pages currently in category.</strong>
 		{% endif %}
+        <a href="{% url 'rango:add_page' category.slug %}">Add a Page</a>
 	{% else %}
 		The specified category does not exist!
 	{% endif %}
-	</div>
-    <div>
-<a href="/rango/category/{{category.slug}}/add_page/">Add Page</a> <br/>
-<a href="/rango/">返回首頁>></a> <br/>
-<img src="{% static "images/0.jpg" %}" alt="Picture of ba" />
-    </div>
-</body>
-</html>
+    <a href="/rango/category/{{category.slug}}/add_page/">Add Page</a> <br/>
+    <a href="/rango/">返回首頁>></a> <br/>
+    <img src="{% static "images/0.jpg" %}" alt="Picture of ba" />
+{% endblock %}
 

@@ -12,23 +12,18 @@
         </title>
     </head>
     <body>
+                {% block nav_blcok %}                
+                {% endblock %}                
             <ul>
-                <li><a href="{% url 'rango:add_category' %}">Add New Category</a></li>
-                <li><a href="{% url 'rango:about' %}">About</a></li>
+                <li><a href="{% url 'rango:add_category' %}">添加新分類</a></li>
                 <li><a href="{% url 'rango:index' %}">首頁</a></li>
-                <li><a href="{% url 'rango:register' %}">注冊</a></li>
+                <li><a href="{% url 'rango:about' %}">About</a></li>
+
             </ul>
         <hr />
     {% block body_block %}
     {% endblock %}
         <hr />
-        <div>
-            <ul>
-                <li><a href="{% url 'rango:about' %}">About</a></li>
-                <li><a href="{% url 'rango:add_category' %}">Add New Category</a></li>
-                <li><a href="{% url 'rango:index' %}">首頁</a></li>
-            </ul>
-        </div>         
 
     </body>
 <script src="{% static "js/jquery.min.js" %}"> </script>

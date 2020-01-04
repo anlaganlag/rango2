@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse,HttpResponseRedirect
@@ -6,17 +7,37 @@ from rango.forms import CategoryForm,PageForm,UserForm,UserProfileForm
 from django.shortcuts import render
 from django.urls import reverse
 
+
+def visitor_cookie_handler(request, response):
+    visits = int(request.COOKIES.get('visits', '1'))
+                                     #存在就獲得,不存在設定爲1
+
+    last_visit_cookie = request.COOKIES.get('last_visit', str(datetime.now()))
+                                     #獲取上次訪問時間,否則爲當前時間
+    last_visit_time = datetime.strptime(last_visit_cookie[:-7],'%Y-%m-%d %H:%M:%S')
+    if (datetime.now() - last_visit_time).seconds > 0:
+        visits = visits + 1
+        response.set_cookie('last_visit', str(datetime.now()))
+    else:
+        visits = 1
+        response.set_cookie('last_visit', last_visit_cookie)
+    response.set_cookie('visits', visits)
+
+
+
 def index(request):
     category_list = Category.objects.order_by('-likes')[:5]
     page_list = Page.objects.order_by('-views')[:5]
     context_dict = {'categories': category_list, 'pages': page_list}
 
-    return render(request, 'rango/index.html', context_dict)
-
+    response =  render(request, 'rango/index.html', context_dict)
+    visitor_cookie_handler(request,response)
+    return response
 
 def about(request):
     return HttpResponse("About page says hey there is no way!")
 
+@login_required
 def show_category(request, category_name_slug):
     context_dict = {}
     try:
@@ -30,6 +51,7 @@ def show_category(request, category_name_slug):
     return render(request, 'rango/category.html', context_dict)
 
 
+@login_required
 def add_category(request):
     form = CategoryForm()
 
@@ -45,6 +67,7 @@ def add_category(request):
             print(form.errors)
     return render(request,'rango/add_category.html',{'form':form})
 
+@login_required
 def add_page(request, category_name_slug):
     try:
         category = Category.objects.get(slug=category_name_slug)
@@ -118,15 +141,14 @@ def user_login(request):
             else:
                 return HttpResponse('Your Rango account is disabled.')
         else:
-            print(f'Invalid login details:{username},{password}')
-            return HttpResponse(f'{username},{password} Invail login details supplied.')
+            return HttpResponse(f'Error!!<br/> 用戶名或密碼錯誤請返回重新輸入!')
     else:
         return render(request,'rango/login.html',{})
 
 
 @login_required
 def restricted(request):
-    return HttpResponse("Since you're logged in, you can see this text!")
+    return render(request,'rango/restricted.html',{})
 
 
 @login_required

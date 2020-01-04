@@ -7,24 +7,25 @@
 
 
 {% block body_block %}
-    {% if category %}
-        <h1>{{ category.name }}</h1>
-
-		{% if pages %}
-			<ul>
-			{% for page in pages %}
-				<li><a href="{{ page.url }}">{{ page.title }}</a></li>
-			{% endfor %}
-			</ul>
-		{% else %}
-			<strong>No pages currently in category.</strong>
-		{% endif %}
-        <a href="{% url 'rango:add_page' category.slug %}">Add a Page</a>
-	{% else %}
-		The specified category does not exist!
-	{% endif %}
-    <a href="/rango/category/{{category.slug}}/add_page/">Add Page</a> <br/>
+        {% if category %}
+            <h1>{{ category.name }}</h1>
+            {% if pages %}
+                <ul>
+                {% for page in pages %}
+                    <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+                {% endfor %}
+                <br/>
+                </ul>
+                <strong><li><a href="{% url 'rango:add_page' category.slug %}">Add_a_Page >></a></li></strong>
+            {% else %}
+                <strong>No pages currently in category.</strong>
+            {% endif %}
+        {% else %}
+            The specified category does not exist!
+        {% endif %}
+        <br/>
+        <br/>
     <a href="/rango/">返回首頁>></a> <br/>
-    <img src="{% static "images/0.jpg" %}" alt="Picture of ba" />
-{% endblock %}
+<img src="{% static "images/0.jpg" %}" alt="Picture of ba" />
+    {% endblock %}
 

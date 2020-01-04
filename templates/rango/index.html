@@ -6,9 +6,8 @@
 {% endblock %}
 
 {% block nav_blcok %}                
-
-       訪問次數: {{ request.COOKIES.visits }} <br/>
-   上次訪問時間:{{ request.COOKIES.last_visit }}
+       訪問次數: {{ request.session.visits }} <br/>
+   上次訪問時間:{{ request.session.last_visit }}
         {% if user.is_authenticated %}
             <li><a href="{% url 'rango:restricted' %}">用戶{{ user.username.title }}已登入</a></li>
             <li><a href="{% url 'rango:logout' %}">登出</a></li>
